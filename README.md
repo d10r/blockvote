@@ -110,11 +110,11 @@ geth account new
 # addr: ae4a95287aaa216c5361db6810d06f28de956c4d
 # password: ******
 geth init genesis.json
-geth --networkid 2016 --rpc --rpcapi "db,eth,net,web3" --rpcaddr 0.0.0.0 --rpcport 2016 --rpccorsdomain "*" --port 32016 --identity blockvote0 --etherbase ae4a95287aaa216c5361db6810d06f28de956c4d --mine --minerthreads 1 console
+geth --networkid 2016 --rpc --rpcapi "db,eth,net,web3" --rpcaddr 0.0.0.0 --rpcport 2016 --rpccorsdomain "*" --port 32016 --identity blockvote0 --etherbase ae4a95287aaa216c5361db6810d06f28de956c4d --mine --minerthreads 1 js conditionalmining.js
 # enode://f64a650831d9b3a0450892c2316cf559213528683a64f408bb16d7161153d528a781fe0ca5de043f2a9ef99fe0d80b6c8b479cf8beaa6fb60fba68435febc14b@5.9.14.88:32016
 ```
 on first run it will take a while to create the DAG.
-
+The file _conditionalmining.js_ is in the setup folder. It disabled mining when no transactions are pending. Avoids wasted CPU cycles during dev.
 
 # Design
 
