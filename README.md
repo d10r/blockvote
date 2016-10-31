@@ -133,7 +133,7 @@ This page should also highlight the security properties, especially those where 
 (Here would be the "get signed token from registry" step. Skipped for now)
 
 This view shows a virtual ballot. It should reflect the view of the paper ballot: http://cdn.salzburg.com/nachrichten/uploads/pics/2016-09/fehlerhafte-wahlkarten-wird-die-bp-stichwahl-verschoben-41-66327366.jpg
-The circles are clickable, on click a cross is drawn. When clicking a circle a second time, the cross is removed. When clicking the other circle, the cross switches over. 
+The circles are clickable, on click a cross is drawn. When clicking a circle a second time, the cross is removed. When clicking the other circle, the cross switches over.
 Below is a big "cast vote" button. Clicking it should also be possible with no candidate selected. In this case a popup should ask for confirmation: "Do you intend to cast a "white vote"?
 
 After click a new screen is shown, with the top label "processing..."
@@ -148,3 +148,13 @@ Technically, we could do live counting, but that would not be conforming with th
 Alternative: do live counting, but remind that in real use that would be disabled because of the law.
 
 PS: We know that it's easy for anyone with modest technical understanding to cast more then one vote and kindly ask for your cooperation by not doing so. Of course the final system would not allow that, because the virtual ballots would be handed out only to those authenticating with a voting registry system, technically implemented via blind token signature. Look at the white paper (linked) for more details about how it works and what else such a system could offer.
+
+# App
+
+Run on command line:
+''npm install -g aurelia-cli''
+''au run —watch''
+
+Open Browser:
+
+''http://localhost:9000/#/home''
