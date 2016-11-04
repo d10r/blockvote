@@ -45,7 +45,10 @@
     "elements": "src/resources/elements",
     "attributes": "src/resources/attributes",
     "valueConverters": "src/resources/value-converters",
-    "bindingBehaviors": "src/resources/binding-behaviors"
+    "bindingBehaviors": "src/resources/binding-behaviors",
+    "fa": "node_modules/font-awesome",
+    "faCssOutput": "src",
+    "faFontsOutput": "fonts"
   },
   "testFramework": {
     "id": "jasmine",
@@ -142,7 +145,15 @@
             "path": "../node_modules/aurelia-testing/dist/amd",
             "main": "aurelia-testing",
             "env": "dev"
-          }
+          },
+                {
+        "name": "font-awesome",
+        "path": "../node_modules/font-awesome/",
+        "main": "",
+        "resources": [
+          "css/font-awesome.min.css"
+        ]
+      }
         ]
       }
     ]

@@ -1,3 +1,20 @@
+define('about',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var About = exports.About = function About() {
+    _classCallCheck(this, About);
+  };
+});
 define('app',['exports', 'jquery', 'bootstrap'], function (exports, _jquery) {
   'use strict';
 
@@ -29,11 +46,41 @@ define('app',['exports', 'jquery', 'bootstrap'], function (exports, _jquery) {
 
     App.prototype.configureRouter = function configureRouter(config, router) {
       config.title = 'Aurelia';
-      config.map([{ route: ['', 'home'], name: 'home', moduleId: 'home', nav: true }, { route: 'vote', name: 'vote', moduleId: 'vote', nav: true }]);
+      config.map([{ route: ['', 'home'], name: 'home', moduleId: 'home', nav: true }, { route: 'authenticate', name: 'authenticate', moduleId: 'authenticate', nav: true }, { route: 'vote', name: 'vote', moduleId: 'vote', nav: true }, { route: 'process', name: 'process', moduleId: 'process', nav: true }, { route: 'result', name: 'result', moduleId: 'result', nav: true }, { route: 'about', name: 'about', moduleId: 'about', nav: true }]);
       this.router = router;
     };
 
     return App;
+  }();
+});
+define('authenticate',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Authenticate = exports.Authenticate = function () {
+    function Authenticate() {
+      _classCallCheck(this, Authenticate);
+
+      this.hidden = true;
+    }
+
+    Authenticate.prototype.ok = function ok() {
+      this.hidden = false;
+      setTimeout(function () {
+        window.location = "#/vote";
+      }, 3000);
+    };
+
+    return Authenticate;
   }();
 });
 define('environment',["exports"], function (exports) {
@@ -102,6 +149,40 @@ define('main',['exports', './environment'], function (exports, _environment) {
     });
   }
 });
+define('process',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Processing = exports.Processing = function Processing() {
+    _classCallCheck(this, Processing);
+  };
+});
+define('result',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Result = exports.Result = function Result() {
+    _classCallCheck(this, Result);
+  };
+});
 define('vote',["exports"], function (exports) {
   "use strict";
 
@@ -128,9 +209,13 @@ define('resources/index',["exports"], function (exports) {
   exports.configure = configure;
   function configure(config) {}
 });
-define('text!app.html', ['module'], function(module) { module.exports = "<template>\n  <link rel=\"stylesheet\" href=\"node_modules/bootstrap/dist/css/bootstrap.min.css\">\n\n  <nav class=\"navbar navbar-default\">\n    <div class=\"container-fluid\">\n      <!-- Brand and toggle get grouped for better mobile display -->\n      <div class=\"navbar-header\">\n        <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\" aria-expanded=\"false\">\n          <span class=\"sr-only\">Toggle navigation</span>\n          <span class=\"icon-bar\"></span>\n          <span class=\"icon-bar\"></span>\n          <span class=\"icon-bar\"></span>\n        </button>\n        <a class=\"navbar-brand\" href=\"#\">Blockvote</a>\n      </div>\n\n      <!-- Collect the nav links, forms, and other content for toggling -->\n      <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">\n        <ul class=\"nav navbar-nav\">\n          <li class=\"active\"><a href=\"#/home\">Home</a></li>\n          <li><a href=\"#/vote\">Vote</a></li>\n        </ul>\n      </div>\n    </div>\n  </nav>\n\n  <router-view></router-view>\n</template>\n"; });
-define('text!home.html', ['module'], function(module) { module.exports = "<template>\n  <h1>Home</h1>\n</template>\n"; });
-define('text!vote.html', ['module'], function(module) { module.exports = "<template>\n  <h1>Vote</h1>\n</template>\n"; });
+define('text!about.html', ['module'], function(module) { module.exports = "<template>\n  <h1>About</h1>\n</template>\n"; });
+define('text!app.html', ['module'], function(module) { module.exports = "<template>\n  <link rel=\"stylesheet\" href=\"node_modules/bootstrap/dist/css/bootstrap.min.css\">\n<require from=\"font-awesome/css/font-awesome.min.css\"></require>\n <link rel=\"stylesheet\" href=\"https://opensource.keycdn.com/fontawesome/4.7.0/font-awesome.min.css\" integrity=\"sha384-dNpIIXE8U05kAbPhy3G1cz+yZmTzA6CY8Vg/u2L9xRnHjJiAK76m2BIEaSEV+/aU\" crossorigin=\"anonymous\"> \n\n  <nav class=\"navbar navbar-default\">\n    <div class=\"container-fluid\">\n      <!-- Brand and toggle get grouped for better mobile display -->\n      <div class=\"navbar-header\">\n        <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\" aria-expanded=\"false\">\n          <span class=\"sr-only\">Toggle navigation</span>\n          <span class=\"icon-bar\"></span>\n          <span class=\"icon-bar\"></span>\n          <span class=\"icon-bar\"></span>\n        </button>\n        <a class=\"navbar-brand\" href=\"#\">Blockvote</a>\n      </div>\n\n      <!-- Collect the nav links, forms, and other content for toggling -->\n      <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">\n        <ul class=\"nav navbar-nav\">\n          <li class=\"active\"><a href=\"#/home\">Home</a></li>\n          <li><a href=\"#/authenticate\">Authenticate</a></li>\n          <li><a href=\"#/vote\">Vote</a></li>\n          <li><a href=\"#/process\">Processing</a></li>\n          <li><a href=\"#/result\">Result</a></li>\n          <li><a href=\"#/about\">About</a></li>\n        </ul>\n      </div>\n    </div>\n  </nav>\n\n  <router-view></router-view>\n</template>\n"; });
+define('text!authenticate.html', ['module'], function(module) { module.exports = "<template>\n  <div class=\"container-fluid\">\n    <div class=\"row\">\n      <div class=\"col-md-offset-3\">\n\n\n        <div class=\"well col-md-6\">\n          <h1>Authenticate</h1>\n          <form class=\"form\">\n            <div class=\"control-group\">\n              <label>Benutzername</label>\n              <input type=\"text\" value=\"asd\" class=\"form-control\"/>\n            </div>\n\n            <div class=\"control-group\">\n              <label>Passwort</label>\n              <input type=\"password\" value=\"asd\" class=\"form-control\"/>\n            </div>\n\n            <a class=\"btn btn-default\" click.trigger=\"ok()\">Anmelden</a>\n          </form>\n\n        </div>\n      </div>\n    </div>\n\n    <i class=\"fa fa-spin fa-spinner ${hidden ? 'disabled selected hidden' : ''}\"></i>\n\n  </div>\n\n\n</template>\n"; });
+define('text!home.html', ['module'], function(module) { module.exports = "<template>\n  <h1>Home</h1>\n  Welcome. You're invited to participate in a proof of concept for a blockchain based voting system.\n  This system doesn't need a central, trusted authority, is easy to set up, cheap, and it is verifiable.\n\n  <div class=\"text-center\">\n\n    <a href=\"#/authenticate\" class=\"btn btn-primary btn-lg\">Get started</a>\n    <br/>\n    <a href=\"#/about\">I first want to know more about what this is about and how it works</a>\n  </div>\n</template>\n"; });
+define('text!process.html', ['module'], function(module) { module.exports = "<template>\n  <h1>Processing</h1>\n  Visualisierung der Blockchain\n</template>\n"; });
+define('text!result.html', ['module'], function(module) { module.exports = "<template>\n  <h1>Result</h1>\n  Ergebnis\n</template>\n"; });
+define('text!vote.html', ['module'], function(module) { module.exports = "<template>\n  <h1>Vote</h1>\n  Wahlzettel hier\n</template>\n"; });
 /*!
  * jQuery JavaScript Library v3.1.1
  * https://jquery.com/
