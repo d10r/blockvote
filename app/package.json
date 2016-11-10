@@ -15,7 +15,8 @@
     "bootstrap": "^3.3.7",
     "es6-module-transpiler": "^0.10.0",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.1.1"
+    "jquery": "^3.1.1",
+    "web3": "^0.17.0-beta"
   },
   "peerDependencies": {},
   "devDependencies": {

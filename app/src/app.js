@@ -7,6 +7,8 @@ export class App {
         this.message = 'Hello World!';
     }
 
+
+
     configureRouter(config, router) {
         config.title = 'Aurelia';
         config.map([
