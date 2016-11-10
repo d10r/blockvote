@@ -1,6 +1,5 @@
 export class Vote {
 
-  constructor() {
-
-  }
+    constructor() {
+    }
 }

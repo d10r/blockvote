@@ -1,6 +1,6 @@
 export class Home {
 
-  constructor() {
+    constructor() {
 
-  }
+    }
 }

@@ -1,6 +1,6 @@
 export class Result {
 
-  constructor() {
+    constructor() {
 
-  }
+    }
 }

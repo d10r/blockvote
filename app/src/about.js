@@ -1,6 +1,6 @@
 export class About {
 
-  constructor() {
+    constructor() {
 
-  }
+    }
 }
