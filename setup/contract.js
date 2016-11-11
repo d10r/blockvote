@@ -21,10 +21,13 @@ const adminAcc = web3.eth.accounts[0]
 var contract = web3.eth.contract(compilerOutput.BKCVote.info.abiDefinition)
 
 
+var estGas = web3.eth.estimateGas({data: compilerOutput.BKCVote.code})
+console.log('estimated gas needed: ' + estGas)
+
 // var contractInstance = MyContract.new([contructorParam1] [, contructorParam2], {data: '0x12345...', from: myAccount, gas: 1000000});
 // constructor params: string _electionName, uint _blockStart, uint _blockEnd
 contract.new(electionName, blockStart, blockEnd,
-    { data: compilerOutput.BKCVote.code, from: adminAcc, gas: 2000000 }, (err, deployedContract) => {
+    { data: compilerOutput.BKCVote.code, from: adminAcc, gas: 3000000 }, (err, deployedContract) => {
         // this callback is fired twice according to the doc. After issuing the transaction and after having been mined
         if(err) {
             console.log(err)
