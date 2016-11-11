@@ -1,28 +1,18 @@
-import environment from './environment';
-
-//Configure Bluebird Promises.
-//Note: You may want to use environment-specific configuration.
-Promise.config({
-    warnings: {
-        wForgottenReturn: false
-    }
-});
+import 'bootstrap';
+import {Configure} from "aurelia-configuration"
 
 export function configure(aurelia) {
-    aurelia.use
-        .standardConfiguration()
-        .feature('resources')
-        .router();
+  aurelia.use
+    .standardConfiguration()
+    .developmentLogging()
+    .plugin('aurelia-configuration');
 
-    if (environment.debug) {
-        aurelia.use.developmentLogging();
-    }
+  //Uncomment the line below to enable animation.
+  //aurelia.use.plugin('aurelia-animator-css');
+  //if the css animator is enabled, add swap-order="after" to all router-view elements
 
-    if (environment.testing) {
-        aurelia.use.plugin('aurelia-testing');
-    }
+  //Anyone wanting to use HTMLImports to load views, will need to install the following plugin.
+  //aurelia.use.plugin('aurelia-html-import-template-loader')
 
-    aurelia.start().then(() => aurelia.setRoot()
-    )
-    ;
+  aurelia.start().then(() => aurelia.setRoot());
 }

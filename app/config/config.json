@@ -1,0 +1,8 @@
+{
+  "ethereum": {
+    "rpc": "http://e.d10r.net:2016",
+    "contract": {
+      "address": "0x3162f07ec283b19afbc7e2c8dc60e669bdadc701"
+    }
+  }
+}

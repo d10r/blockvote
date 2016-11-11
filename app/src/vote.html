@@ -1,6 +1,12 @@
 <template>
-    <h1>Vote</h1>
-    Wahlzettel hier
-    <a class="btn btn-default" click.trigger="cast_vote()">Stimme abgeben</a>
+  <h1>Vote</h1>
+  Wahlzettel hier
+
+  <form>
+    <input type="radio" name="candidate" value="1" checked>Alexander van der Bellen<br>
+    <input type="radio" name="candidate" value="2">Norbert Hofer<br>
+  </form>
+
+  <a class="btn btn-default" click.trigger="cast_vote()">Stimme abgeben</a>
 
 </template>
