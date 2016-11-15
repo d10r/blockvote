@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "web3": "^0.17.0-beta"
+  }
+}
+
