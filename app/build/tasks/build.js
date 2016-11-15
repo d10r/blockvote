@@ -10,6 +10,8 @@ var assign = Object.assign || require('object.assign');
 var notify = require('gulp-notify');
 var browserSync = require('browser-sync');
 var htmlmin = require('gulp-htmlmin');
+var less = require('gulp-less');
+var path = require('path');
 
 // transpiles changed es6 files to SystemJS format
 // the plumber() call prevents 'pipe breaking' caused
@@ -33,6 +35,16 @@ gulp.task('build-html', function() {
     .pipe(gulp.dest(paths.output));
 });
 
+// compile less
+gulp.task('build-less', function () {
+  return gulp.src(paths.less)
+    .pipe(changed(paths.stylesRoot))
+    .pipe(less({
+      paths: [ path.join(__dirname, 'less', 'includes') ]
+    }))
+    .pipe(gulp.dest(paths.stylesRoot));
+});
+
 // copies changed css files to the output directory
 gulp.task('build-css', function() {
   return gulp.src(paths.css)
@@ -48,7 +60,7 @@ gulp.task('build-css', function() {
 gulp.task('build', function(callback) {
   return runSequence(
     'clean',
-    ['build-system', 'build-html', 'build-css'],
+    ['build-system', 'build-html', 'build-less', 'build-css'],
     callback
   );
 });
