@@ -17,6 +17,10 @@ export class Vote {
         }
     }
 
+    setVote(candidate) {
+      this.vote = candidate;
+    }
+
     cast_vote() {
         //
     }

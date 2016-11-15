@@ -12,19 +12,19 @@
 
         <table class="table table-bordered">
           <tr>
-            <th class="canidate-header">Vorname und Familienname des Wahlwerbers</th>
+            <th class="candidate-header">Vorname und Familienname des Wahlwerbers</th>
             <th class="vote-header">Für gewählten Wahlwerber im Kreis ein<br/><i class="fa fa-times"></i><br/> einsetzen</th>
           </tr>
           <tr>
-            <td class="canidate">Alexander van der Bellen</td>
-            <td class="vote">
-              <i class="fa fa-times-circle-o"></i>
+            <td class="candidate">Alexander van der Bellen</td>
+            <td class="vote" click.trigger="setVote('bellen')">
+              <i class="fa ${vote == 'bellen' ? 'fa-times-circle-o' : 'fa-circle-o'}"></i>
             </td>
           </tr>
           <tr>
-            <td class="canidate">Norbert Hofer</td>
-            <td class="vote">
-              <i class="fa fa-circle-o"></i>
+            <td class="candidate">Norbert Hofer</td>
+            <td class="vote" click.trigger="setVote('hofer')">
+              <i class="fa ${vote == 'hofer' ? 'fa-times-circle-o' : 'fa-circle-o'}"></i>
             </td>
           </tr>
         </table>

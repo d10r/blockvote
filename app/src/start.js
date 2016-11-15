@@ -1,4 +1,13 @@
+import {inject} from 'aurelia-framework';
+import {Router} from 'aurelia-router';
+
+@inject(Router)
 export class Start {
-    constructor() {
+    constructor(router) {
+      this.router = router;
+    }
+
+    ok() {
+      //this.router.currentInstruction.config.name ==
     }
 }
