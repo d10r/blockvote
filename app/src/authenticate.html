@@ -1,35 +1,37 @@
 <template>
-    <div class="container-fluid">
-        <div class="row well col-md-6">
-            In diesem Schritt erfolgt die Authentifizierung bei einem digitalen Wählerregister.<br>
-            Dies könnte z.B. über die Bürgerkarte oder Handysignatur erfolgen.<br>
-            <br>
-            Zur Zeit ist diese Funktionalität nicht implementiert, zur Veranschaulichung gibt es hier aber ein
-            funktionsloses Anmelde-Formular.
-        </div>
-        <div class="row">
-            <div class="col-md-offset-3">
-                <div class="well col-md-6">
-                    <h1>Authentifizierung</h1>
-                    <form class="form">
-                        <div class="control-group">
-                            <label>Benutzername</label>
-                            <input type="text" value="Demo-Benutzername" class="form-control"/>
-                        </div>
+  <div id="loader" class="${hidden ? 'disabled selected hidden' : ''}">
+    <i class="fa fa-spin fa-spinner"></i>
+  </div>
 
-                        <div class="control-group">
-                            <label>Passwort</label>
-                            <input type="password" value="Demo-Passwort" class="form-control"/>
-                        </div>
-
-                        <a class="btn btn-default" click.trigger="ok()">Anmelden</a>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <i class="fa fa-spin fa-spinner ${hidden ? 'disabled selected hidden' : ''}"></i>
-
+  <div class="container-fluid">
+    <div class="row">
+      <div class="well col-md-offset-3 col-md-6">
+        In diesem Schritt erfolgt die Authentifizierung bei einem digitalen Wählerregister.<br>
+        Dies könnte z.B. über die Bürgerkarte oder Handysignatur erfolgen.<br>
+        <br>
+        Zur Zeit ist diese Funktionalität nicht implementiert, zur Veranschaulichung gibt es hier aber ein
+        funktionsloses Anmelde-Formular.
+      </div>
     </div>
+    <div class="row">
+      <div class="well col-md-offset-3 col-md-6">
+          <h1>Authentifizierung</h1>
+          <form class="form">
+            <div class="form-group">
+              <label>Benutzername</label>
+              <input type="text" value="Demo-Benutzername" class="form-control"/>
+            </div>
 
+            <div class="form-group">
+              <label>Passwort</label>
+              <input type="password" value="Demo-Passwort" class="form-control"/>
+            </div>
 
+            <div class="form-group">
+              <a class="btn btn-primary" click.trigger="ok()">Anmelden</a>
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
 </template>

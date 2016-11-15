@@ -1,12 +1,24 @@
 <template>
-  <h1>Vote</h1>
-  Wahlzettel hier
+  <div class="container-fluid">
+    <h1>Vote</h1>
+    Wahlzettel hier
 
-  <form>
-    <input type="radio" name="candidate" value="1" checked>Alexander van der Bellen<br>
-    <input type="radio" name="candidate" value="2">Norbert Hofer<br>
-  </form>
 
-  <a class="btn btn-default" click.trigger="cast_vote()">Stimme abgeben</a>
+    <table class="table table-bordered">
+      <tr>
+        <th>Vorname und Familienname des Wahlwerbers</th>
+        <th>Für gewählten Wahlwerber im Kreis ein <i class="fa fa-check"></i> einsetzen</th>
+      </tr>
+      <tr>
+        <td>Alexander van der Bellen</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Norbert Hofer</td>
+        <td></td>
+      </tr>
+    </table>
 
+    <a class="btn btn-default" click.trigger="cast_vote()">Stimme abgeben</a>
+  </div>
 </template>
