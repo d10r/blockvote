@@ -16,8 +16,6 @@ export class Authenticate {
         this.appState.token = this.logic.getRandomToken()
 
         // (in the final implementation, it should then be blinded and sent to the registry for singning)
-
-
         this.hidden = false;
         setTimeout(() => {
             window.location = "#/vote";

@@ -11,7 +11,7 @@ export class Vote {
 
         if(this.appState.token === null) {
             console.log('token not set, need auth')
-            window.location = "#/authenticate";
+            //window.location = "#/authenticate";
         } else {
             console.log('token: ' + this.appState.token)
         }
