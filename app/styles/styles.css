@@ -235,3 +235,10 @@ div.au-stagger {
   margin-bottom: 20px;
   display: block;
 }
+.page-process {
+  margin: auto;
+}
+.page-process .scrollable {
+  overflow: scroll;
+  height: 80vh;
+}
