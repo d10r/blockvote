@@ -4,5 +4,9 @@
     "contract": {
       "address": "0x3162f07ec283b19afbc7e2c8dc60e669bdadc701"
     }
+  },
+  "gasDistributor": {
+    "iface": "0.0.0.0",
+    "port": "8599"
   }
 }
