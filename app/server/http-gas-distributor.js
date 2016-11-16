@@ -23,13 +23,14 @@ http.createServer((req, res) => {
     if(splitPath[1] == 'addr' && splitPath[2].startsWith('0x')) {
         var userAddr = splitPath[2]
         console.log(`go serve ${userAddr}`)
+        res.setHeader('Access-Control-Allow-Origin', '*');
         refuelAccount(userAddr, (err, txHash) => {
             if(err) {
                 res.writeHead(500, {'Content-Type': 'text/plain'})
                 res.end('Sorry, something went wront here')
             }
             if(txHash) {
-                res.writeHead(200, {'Content-Type': 'text/plain'})
+                res.writeHead(200, {'Content-Type': 'application/json'})
                 res.end(JSON.stringify({
                   'txHash': txHash,
                   'msg': 'One szabo is on the way'
