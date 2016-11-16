@@ -8,5 +8,7 @@
   "gasDistributor": {
     "iface": "0.0.0.0",
     "port": "8599"
-  }
+  },
+  "refuelBaseUrl": "http://127.0.0.1:8599/addr/",
+  "refuelBaseUrlREMOTE": "http://e.d10r.net/refuel/addr/"
 }
