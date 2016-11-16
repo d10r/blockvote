@@ -2,7 +2,7 @@ import {inject} from 'aurelia-framework'
 import {Configure} from 'aurelia-configuration'
 
 import Web3 from 'web3'
-import Crypt from 'jsencrypt'
+import Wallet from 'ethereumjs-wallet'
 
 @inject(Configure)
 export class Logic {
@@ -27,8 +27,6 @@ export class Logic {
 
         console.log('votersCount(): ' + this.contractInstance.getVotersCount())
 
-
-
     }
 
     getRandomToken() {
@@ -38,6 +36,29 @@ export class Logic {
         return token
         // TODO: convert to an alphanumberic string
     }
+
+    createNewAddress() {
+        //var wallet = new Wallet()
+        var newAddr = Wallet.generate()
+        return newAddr.getAddressString()
+    }
+
+    // requests some funding for the given address, needed in order to be able to send transactions
+    // It may take a while (~20 seconds) for the funds to become available. That delay needs to be handled in UI
+    // TODO: persist txhash somewhere, e.g. in appstate?
+    refuelTxHash = null
+    fundAccount(address) {
+        $.ajax( this.config.getAll().refuelBaseUrl + address )
+            .done( (data, textStatus, jqXHR) => {
+                console.log('refuel done: ' + data)
+                this.refuelTxHash = data.txHash
+                console.log(this.refuelTxHash)
+            })
+            .fail( ( jqXHR, textStatus, errorThrown) => {
+                console.log('refuel fail: ' + textStatus + ' - ' + errorThrown)
+            })
+    }
+
 
     contracts = {
         "BKCVote": {

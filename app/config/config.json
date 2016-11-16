@@ -4,5 +4,11 @@
     "contract": {
       "address": "0x3162f07ec283b19afbc7e2c8dc60e669bdadc701"
     }
-  }
+  },
+  "gasDistributor": {
+    "iface": "0.0.0.0",
+    "port": "8599"
+  },
+  "refuelBaseUrl": "http://127.0.0.1:8599/addr/",
+  "refuelBaseUrlREMOTE": "http://e.d10r.net/refuel/addr/"
 }
