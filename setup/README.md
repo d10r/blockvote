@@ -1,7 +1,6 @@
-Run with
-`node contract.js`
+See
+`node main.js --help`
 
-Contract at the moment just a copy from https://augustol.github.io/BKCVote/
 admin account on e.d10r.net:2016 unlocked during dev/testing
 
 TODO:
