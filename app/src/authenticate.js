@@ -22,6 +22,10 @@ export class Authenticate {
         // generate random token
         this.appState.token = this.logic.getRandomToken()
 
+        debugger
+        this.logic.setAddress(addr)
+        this.logic.testContract()
+
         // (in the final implementation, it should then be blinded and sent to the registry for signing)
 
         this.hidden = false;

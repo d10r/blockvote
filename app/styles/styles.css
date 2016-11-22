@@ -213,6 +213,7 @@ div.au-stagger {
 }
 .nav-vote li.active {
   font-weight: bold;
+  color: #9c0033;
 }
 .page-start {
   text-align: center;
