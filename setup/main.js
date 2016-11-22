@@ -8,7 +8,7 @@ const config = require('./config')
 var context = {}
 var compileTask = { enabled: false, runner: require('./tasks/compile') }
 var createTask = { enabled: false, runner: require('./tasks/create') }
-var initTask = { enabled: false, runner: require('./tasks/init')}
+var configTask = { enabled: false, runner: require('./tasks/config')}
 
 parseCmdline()
 
@@ -22,34 +22,37 @@ if(compileTask.enabled) {
     compileTask.runner.run(context)
 }
 
-context.contract.abi
 if(createTask.enabled) {
     console.log('creating...')
     loadCompiledFile()
     // is there really no better way to synchronize this?
     createTask.runner.run(context).then( () => {
-        checkExecInit()
+        checkExecConfig()
     })
 } else {
-    checkExecInit()
+    checkExecConfig()
 }
 
-function checkExecInit() {
-    if (initTask.enabled) {
-        console.log('initializing...')
+function checkExecConfig() {
+    if (configTask.enabled) {
+        console.log('configuring...')
         if (!context.contract.abi) {
             loadCompiledFile()
         }
         loadContract()
-        initTask.runner.run(context)
+        configTask.runner.run(context)
     }
 }
 
 // ################ helpers #################
 
 function usageExit() {
-    console.log(`\tusage: ${process.argv[1]} [--compile <solidity contract source file>] [--create] [--init] `)
+    console.log(`\tusage: ${process.argv[1]} [--compile <solidity contract source file>] [--create <election name>] [--config <command>] `)
     console.log('\t\t <solidity contract source file> is expected to have the suffix ".sol"')
+    console.log('\t\t config commands:')
+    console.log('\t\t\t addCandidate <name>:')
+    console.log('\t\t\t startElection:')
+    console.log('\t\t\t stopElection:')
     process.exit(1)
 }
 
@@ -69,22 +72,54 @@ function parseCmdline() {
     }
 
     if(process.argv.indexOf('--create') != -1) {
-        createTask.enabled = true
+        var electionNameIndex = process.argv.indexOf('--create') + 1
+         if(! process.argv[electionNameIndex]) {
+            usageExit()
+        } else {
+            createTask.enabled = true
+            context.electionName =  process.argv[electionNameIndex]
+        }
     }
 
-    if(process.argv.indexOf('--init') != -1) {
-        initTask.enabled = true
+    if(process.argv.indexOf('--config') != -1) {
+        var configCmdIndex = process.argv.indexOf('--config') + 1
+        if(! process.argv[configCmdIndex]) {
+            usageExit()
+        } else {
+            configTask.enabled = true
+            var configCmd = process.argv[configCmdIndex]
+            if(configCmd == 'addCandidate') {
+                if(! process.argv[configCmdIndex+1]) {
+                    usageExit()
+                } else {
+                    context.candidateName = process.argv[configCmdIndex+1]
+                }
+            } else if(configCmd == 'startElection') {
+                context.startElection = true
+            } else if(configCmd == 'stopElection') {
+                context.stopElection = true
+            } else if(configCmd == 'test') {
+                context.test = true
+            } else {
+                usageExit()
+            }
+        }
     }
 }
 
 function loadCompiledFile() {
     var fileContents = fs.readFileSync(context.compiledFile)
     context.compilerOutput = JSON.parse(fileContents.toString())
-    context.contract.name = Object.keys(context.compilerOutput)[0]
-    context.contract.raw = context.compilerOutput[context.contract.name]
-    context.contract.abi = context.contract.raw.info.abiDefinition
 
-    // context.contract.instance = null
+    // file format seems to have changed recently
+    if(Object.keys(context.compilerOutput)[0] != 'code') {
+        contractName = Object.keys(context.compilerOutput)[0]
+        context.contract.code = context.compilerOutput[contractName].code
+        context.contract.abi = context.compilerOutput[contractName].info.abiDefinition
+    } else {
+        context.contract.code = context.compilerOutput.code
+        context.contract.abi = context.compilerOutput.info.abiDefinition
+    }
 }
 
 // creates the contract object from the abi
@@ -96,3 +131,24 @@ function loadContract() {
     context.contract.instance = context.contract.object.at(address)
     console.log('contract loaded')
 }
+
+// for repl
+// .load repl_init.js
+// node -e "`cat ./repl_init.js`" -i
+/*
+fs = require('fs')
+Web3 = require('web3')
+
+web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:2016'))
+
+file = fs.readFileSync('tmp/compiled_contract.json')
+compiled = JSON.parse(file)
+abi = compiled.Election.info.abiDefinition
+object = web3.eth.contract(abi)
+address = fs.readFileSync('tmp/deployed_address').toString()
+instance = object.at(address)
+instance.testFunc.call()
+
+events = instance.allEvents()
+events.watch( (err, event) => { if(! err) console.log(event) } )
+ */

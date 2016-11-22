@@ -2,12 +2,8 @@ var fs = require('fs')
 
 exports.run = (ctx) => {
     return new Promise( (resolve) => {
-        var estGas = ctx.web3.eth.estimateGas({data: ctx.contract.raw.code})
+        var estGas = ctx.web3.eth.estimateGas({data: ctx.contract.code})
         console.log('estimated gas needed: ' + estGas)
-
-
-        // TODO: make generic / handle via params or remove from constructor
-        const electionName = "BP2016"
 
         const adminAcc = ctx.web3.eth.accounts[0]
 
@@ -16,8 +12,8 @@ exports.run = (ctx) => {
         // var contractInstance = MyContract.new([contructorParam1] [, contructorParam2], {data: '0x12345...', from: myAccount, gas: 1000000});
         // constructor params: string _electionName, uint _blockStart, uint _blockEnd
 
-        ctx.contract.object.new(electionName,
-            {data: ctx.contract.raw.code, from: adminAcc, gas: 3000000}, (err, contractInstance) => {
+        ctx.contract.object.new(ctx.electionName,
+            {data: ctx.contract.code, from: adminAcc, gas: 3000000}, (err, contractInstance) => {
                 // this callback is fired twice according to the doc. After issuing the transaction and after having been mined
                 if (err) {
                     console.log(err)
@@ -31,6 +27,7 @@ exports.run = (ctx) => {
                     else {
                         console.log("address: " + contractInstance.address)
                         fs.writeFileSync(ctx.deployedAddressFile, contractInstance.address)
+                        updateWebJsFile(contractInstance.address) // uuhhh oohhh
                         console.log('all done, all happy!')
                         resolve()
                     }
@@ -38,4 +35,10 @@ exports.run = (ctx) => {
             })
 
     })
+}
+
+function updateWebJsFile(address) {
+    var oldData = fs.readFileSync('../app/src/contracts.js')
+    var newData = oldData.toString().replace(/<contractaddress-placeholder>/g, address)
+    fs.writeFileSync('../app/src/contracts.js', newData)
 }

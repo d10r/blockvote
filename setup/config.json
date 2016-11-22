@@ -1,5 +1,6 @@
 {
   "ethereum": {
-    "rpc": "http://e.d10r.net:2016"
+    "rpc": "http://localhost:2016",
+    "rpcREMOTE": "http://e.d10r.net:2016"
   }
 }

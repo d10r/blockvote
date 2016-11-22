@@ -10,5 +10,8 @@
     "promise": "^7.1.1",
     "wait.for-es6": "^0.1.0",
     "web3": "^0.14"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
   }
 }
