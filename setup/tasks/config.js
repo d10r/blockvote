@@ -12,12 +12,23 @@ exports.run = (ctx) => {
     }
 
     if(ctx.candidateName) {
-        var ret = ctx.contract.instance.addCandidate.call(ctx.candidateName, 'nix')
-        console.log('added: ' + ret)
+        var ret = ctx.contract.instance.addCandidate(ctx.candidateName)
+        console.log('added: ' + ctx.candidateName + ' - ' + ret)
     }
 
-    var ret = ctx.contract.instance.candidates.call(0)
-    console.log(ret)
+    if(ctx.startElection) {
+        var ret = ctx.contract.instance.startElection()
+        console.log('election started' + ' - ' + ret)
+    }
+
+    if(ctx.stopElection) {
+        var ret = ctx.contract.instance.stopElection()
+        console.log('election stopped' + ' - ' + ret)
+    }
+
+
+    //var ret = ctx.contract.instance.candidates.call(0)
+    //console.log(ret)
 
     // set candidates
 }

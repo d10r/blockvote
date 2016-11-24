@@ -8,11 +8,12 @@ const config = require('./config')
 var context = {}
 var compileTask = { enabled: false, runner: require('./tasks/compile') }
 var createTask = { enabled: false, runner: require('./tasks/create') }
-var configTask = { enabled: false, runner: require('./tasks/config')}
+var configTask = { enabled: false, runner: require('./tasks/config') }
 
 parseCmdline()
 
 var web3 = new Web3(new Web3.providers.HttpProvider(config.ethereum.rpc))
+web3.eth.defaultAccount = web3.eth.accounts[0]
 context = Object.assign(context, { web3: web3, contract: { abi: null, instance: null }, compiledFile: 'tmp/compiled_contract.json', deployedAddressFile: 'tmp/deployed_address' } )
 
 // ################ execute tasks #################

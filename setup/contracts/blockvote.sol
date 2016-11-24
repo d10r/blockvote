@@ -6,6 +6,7 @@ ERROR CODES
 Error 1 = NO_PERMISSION
 Error 2 = ALREADY_VOTED
 Error 3 = INVALID_TOKEN
+Error 99 = WRONG_STAGE
 */
 
 contract Election {
@@ -14,7 +15,8 @@ contract Election {
 
     event error(uint);
     event log(string);
-    event voteEvent(string);
+    event voteEvent(string, uint);
+    event candidateAdded(string, uint);
 
 // ############## STRUCTS ##############
 
@@ -46,9 +48,12 @@ contract Election {
     Candidate[] public candidates;
     
     Voter[] public voters;
+    uint public nrVotes = 0;
 
 
 // ############## PUBLIC FUNCTIONS ##############
+
+// TODO: add constant keyword to readonly functions. Remove return from write functions
 
     // Constructor of the contract
     function Election(string _name) {
@@ -56,11 +61,13 @@ contract Election {
         name = _name;
     }
 
-    function addCandidate(string _name) requiresAdmin preVoting {
+    // TODO: add modifier prevoting
+    function addCandidate(string _name) requiresAdmin {
         candidates.push(Candidate({
             name: _name
         }));
         log("candidate added");
+        candidateAdded(_name, candidates.length);
     }
 
     function startElection() preVoting {
@@ -71,9 +78,10 @@ contract Election {
         currentStage = Stage.POST_VOTING;
     }
     
-    function vote(string _token, string _vote, uint _candidateId) voting returns(uint) {
-        if(alreadyVoted(_token)) return 2; // ALREADY_VOTED
-        if(! isTokenValid(_token)) return 3; // INVALID_TOKEN
+    function vote(string _token, string _vote, uint _candidateId) returns(uint) {
+        if(currentStage != Stage.VOTING) { error(99); return 99; } // WRONG_STAGE
+        if(alreadyVoted(_token)) { error(2); return 2; } // ALREADY_VOTED
+        if(! isTokenValid(_token)) { error(3); return 3; } // INVALID_TOKEN
 
         // check vote validity
 
@@ -83,7 +91,8 @@ contract Election {
             vote: _vote,
             candidateId: _candidateId
         }));
-        voteEvent(_token);
+        nrVotes++;
+        voteEvent(_token, nrVotes);
         return 0;
     }
 
