@@ -10,6 +10,7 @@ System.config({
     "aurelia-animator-css": "npm:aurelia-animator-css@1.0.1",
     "aurelia-bootstrapper": "npm:aurelia-bootstrapper@1.0.0",
     "aurelia-configuration": "github:vheissu/aurelia-configuration@1.0.14",
+    "aurelia-cookie": "npm:aurelia-cookie@1.0.9",
     "aurelia-fetch-client": "npm:aurelia-fetch-client@1.0.1",
     "aurelia-framework": "npm:aurelia-framework@1.0.6",
     "aurelia-history-browser": "npm:aurelia-history-browser@1.0.0",
@@ -23,6 +24,7 @@ System.config({
     "aurelia-templating-router": "npm:aurelia-templating-router@1.0.0",
     "bluebird": "npm:bluebird@3.4.1",
     "bootstrap": "github:twbs/bootstrap@3.3.7",
+    "ethereumjs-tx": "npm:ethereumjs-tx@1.1.4",
     "ethereumjs-wallet": "npm:ethereumjs-wallet@0.6.0",
     "fetch": "github:github/fetch@1.0.0",
     "font-awesome": "npm:font-awesome@4.6.3",
@@ -382,7 +384,27 @@ System.config({
       "inherits": "npm:inherits@2.0.1",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
+    "npm:ethereum-common@0.0.17": {
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
+    },
+    "npm:ethereumjs-tx@1.1.4": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.0",
+      "ethereum-common": "npm:ethereum-common@0.0.17",
+      "ethereumjs-util": "npm:ethereumjs-util@5.0.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
+    },
     "npm:ethereumjs-util@4.5.0": {
+      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "bn.js": "npm:bn.js@4.11.6",
+      "buffer": "github:jspm/nodelibs-buffer@0.1.0",
+      "create-hash": "npm:create-hash@1.1.2",
+      "keccakjs": "npm:keccakjs@0.2.1",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "rlp": "npm:rlp@2.0.0",
+      "secp256k1": "npm:secp256k1@3.2.2"
+    },
+    "npm:ethereumjs-util@5.0.1": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "bn.js": "npm:bn.js@4.11.6",
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",

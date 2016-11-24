@@ -8,12 +8,14 @@ export class Authenticate {
     constructor(appState, logic) {
         this.appState = appState
         this.logic = logic
-        this.hidden = true;
+        this.loaderHidden = true
+
+        window.authenticate = this
     }
 
     ok() {
         // create new account
-        var addr = this.logic.createNewAddress()
+        var addr = this.logic.createWallet()
         console.log('new addr: ' + addr)
 
         // get some funding for it
@@ -22,13 +24,13 @@ export class Authenticate {
         // generate random token
         this.appState.token = this.logic.getRandomToken()
 
-        debugger
         this.logic.setAddress(addr)
-        this.logic.testContract()
 
         // (in the final implementation, it should then be blinded and sent to the registry for signing)
 
-        this.hidden = false;
+        this.loaderHidden = false;
+
+        // simulate remote processing
         setTimeout(() => {
             window.location = "#/vote";
         }, 1500)
