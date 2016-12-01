@@ -1,15 +1,16 @@
 import {inject} from 'aurelia-framework'
 import {ApplicationState} from 'applicationstate'
 import {Logic} from 'logic'
-import * as cryptoHelper from 'crypto'
+import {Crypto} from 'crypto'
 
-@inject(ApplicationState, Logic)
+@inject(ApplicationState, Logic, Crypto)
 export class Vote {
 
-    constructor(appState, logic) {
+    constructor(appState, logic, crypto) {
         this.appState = appState
         this.logic = logic
         this.web3 = logic.web3
+        this.crypto = crypto
 
         if (this.appState.token === null) {
             console.log('token not set, need auth')
@@ -25,7 +26,6 @@ export class Vote {
     setVote(candidate) {
         this.vote = candidate
         this.candidateId = parseInt(candidate)
-        cryptoHelper.test_import_key()
     }
 
     castVote() {
@@ -41,10 +41,15 @@ export class Vote {
     castVoteConfirmed() {
         // TODO: visualize state if waiting for promise
         this.logic.accountFundedPromise.then( () => {
-            this.logic.castVote(this.candidateId)
-            this.appState.persist()
+            this.logic.prepareVote(this.candidateId).then( (cipheredData) => {
+                var cipheredValue = this.crypto.arrayBufferToBase64String(cipheredData);
+                console.log('data: ' + cipheredData)
+                console.log('value: ' + cipheredValue)
 
-            window.location = "#/process";
+                this.logic.castVote(cipheredValue)
+
+                window.location = "#/process";
+            })
         })
     }
 }

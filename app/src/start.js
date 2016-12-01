@@ -10,8 +10,9 @@ export class Start {
 
         window.start = this // DEBUG
 
-
     }
 
-
+    testCrypto() {
+        this.logic.testCrypto()
+    }
 }

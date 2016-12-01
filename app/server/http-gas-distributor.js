@@ -55,12 +55,11 @@ function refuelAccount(userAcc, callback) {
         var adminBalance = web3.eth.getBalance(adminAcc)
         var userBalance = web3.eth.getBalance(userAcc)
 
-//        console.log('1 szabo is 10^12 wei')
         console.log(`balance of admin account : ${web3.fromWei(adminBalance, 'ether')} ether`)
         console.log(`balance of account ${userAcc} : ${web3.fromWei(userBalance, 'ether')} ether`)
     }
 
-    console.log('sending 1 szabo to user...')
+    console.log('sending 1 ether to user...')
     txHash = web3.eth.sendTransaction({from: adminAcc, to: userAcc, value: web3.toWei(1, 'ether')})
     callback(null, txHash)
 

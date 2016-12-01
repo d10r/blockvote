@@ -17,6 +17,7 @@ contract Election {
     event log(string);
     event voteEvent(string, uint);
     event candidateAdded(string, uint);
+    event resultPublished(string);
 
 // ############## STRUCTS ##############
 
@@ -50,6 +51,8 @@ contract Election {
     Voter[] public voters;
     uint public nrVotes = 0;
 
+    string public result = "";
+    string public privateKey = "";
 
 // ############## PUBLIC FUNCTIONS ##############
 
@@ -105,6 +108,13 @@ contract Election {
             }
         }
         return votes;
+    }
+
+    function publishResult(string _result, string _privateKey) requiresAdmin {
+        result = _result;
+        privateKey = _privateKey;
+
+        resultPublished(_result);
     }
 
 // ############## MODIFIERS ##############

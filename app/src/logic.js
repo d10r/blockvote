@@ -2,19 +2,23 @@ import {inject} from 'aurelia-framework'
 import {Configure} from 'aurelia-configuration'
 
 import Web3 from 'web3'
-import Wallet from 'ethereumjs-wallet'
-import Tx from 'ethereumjs-tx'
+//import Wallet from 'ethereumjs-wallet'
+//import Tx from 'ethereumjs-tx'
+import 'ethereumjs-wallet-workaround'
 
 // can't figure out how to model this module to get it usable without injection
 import {Contracts} from 'contracts'
 
+import {Crypto} from 'crypto'
+
 // TODO: test browser compatibility (e.g. crypto api)
 
-@inject(Configure, Contracts)
+@inject(Configure, Contracts, Crypto)
 export class Logic {
-    constructor(config, contracts) {
+    constructor(config, contracts, crypto) {
         this.config = config
         this.contracts = contracts
+        this.crypto = crypto
 
         // eth and account setup are done asap, because the funding request will take some time anyway
         // and may block voting (the voting module waits for a funding promise)
@@ -28,6 +32,14 @@ export class Logic {
         window.logic = this
         //window.Wallet = Wallet
         window.tx = Tx
+    }
+
+    testCrypto() {
+        this.crypto.encryptionPromise('hallo').then( (cipheredData) => {
+            var cipheredValue = this.crypto.arrayBufferToBase64String(cipheredData);
+            console.log('data: ' + cipheredData)
+            console.log('value: ' + cipheredValue)
+        })
     }
 
     initEth() {
@@ -145,13 +157,28 @@ export class Logic {
         // TODO: convert to an alphanumeric string
     }
 
-    castVote(candidateId) {
+    getCandidateNameById(id) {
+        if(id == 0)
+            return 'vdb'
+        else if(id == 1)
+            return 'hofer'
+        else
+            return 'invalid'
+    }
+
+    // returns a promise for an encrypted vote
+    prepareVote(candidateId) {
+        let candidateName = this.getCandidateNameById(candidateId)
+        return this.crypto.encryptionPromise(candidateName)
+    }
+
+    castVote(encryptedVote) {
         this.watchErrors()
         this.watchLog()
 
         //this.Election.vote(this.getRandomToken(), 'dummy', candidateId) // that would be too easy :-)
         // we need to manually handle the transaction creation and signing process
-        let callData = this.Election.vote.getData(this.getRandomToken(), 'dummy', candidateId)
+        let callData = this.Election.vote.getData(this.getRandomToken(), encryptedVote, 99)
         let pk = this.wallet.getPrivateKey()
         let rawTx = {
             nonce: '0x00', // our first transaction

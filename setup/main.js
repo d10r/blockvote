@@ -55,8 +55,9 @@ function usageExit() {
     console.log('\t\t <solidity contract source file> is expected to have the suffix ".sol"')
     console.log('\t\t config commands:')
     console.log('\t\t\t addCandidate <name>:')
-    console.log('\t\t\t startElection:')
-    console.log('\t\t\t stopElection:')
+    console.log('\t\t\t startElection')
+    console.log('\t\t\t stopElection')
+    console.log('\t\t\t processResult')
     process.exit(1)
 }
 
@@ -102,6 +103,8 @@ function parseCmdline() {
                 context.startElection = true
             } else if(configCmd == 'stopElection') {
                 context.stopElection = true
+            } else if(configCmd == 'processResult') {
+                context.processResult = true
             } else if(configCmd == 'test') {
                 context.test = true
             } else {
