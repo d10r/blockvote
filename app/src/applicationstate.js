@@ -1,9 +1,6 @@
-import {Cookie} from 'aurelia-cookie';
-
-// TODO: get the cookie thing working
 export class ApplicationState {
     constructor() {
-        this.token = Cookie.get('token')
+        this.token = localStorage.getItem('token')
         console.log('appstate ctor - token: ' + this.token)
     }
 
@@ -13,15 +10,10 @@ export class ApplicationState {
 
     persist() {
         if(this.token)
-            Cookie.set('token', this.token, {
-                expiry: 24, // hours
-                path: '',
-                domain: '',
-                secure: true
-            })
+            localStorage.setItem('token', this.token)
     }
 
     reset() {
-        Cookie.delete('token')
+        localStorage.clear()
     }
 }
