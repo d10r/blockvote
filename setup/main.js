@@ -15,6 +15,9 @@ parseCmdline()
 var web3 = new Web3(new Web3.providers.HttpProvider(config.ethereum.rpc))
 web3.eth.defaultAccount = web3.eth.accounts[0]
 context = Object.assign(context, { web3: web3, contract: { abi: null, instance: null }, compiledFile: 'tmp/compiled_contract.json', deployedAddressFile: 'tmp/deployed_address' } )
+if (!fs.existsSync('tmp')){
+    fs.mkdirSync('tmp');
+}
 
 // ################ execute tasks #################
 

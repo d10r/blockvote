@@ -33,7 +33,7 @@ http.createServer((req, res) => {
                 res.writeHead(200, {'Content-Type': 'application/json'})
                 res.end(JSON.stringify({
                   'txHash': txHash,
-                  'msg': 'One szabo is on the way'
+                  'msg': 'Funds are on the way'
                 }))
             }
         })

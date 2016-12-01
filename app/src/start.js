@@ -1,13 +1,17 @@
 import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
+import {Logic} from 'logic'
 
-@inject(Router)
+@inject(Router, Logic)
 export class Start {
-    constructor(router) {
-      this.router = router;
+    constructor(router, logic) {
+        this.router = router
+        this.logic = logic
+
+        window.start = this // DEBUG
+
+
     }
 
-    ok() {
-      //this.router.currentInstruction.config.name ==
-    }
+
 }

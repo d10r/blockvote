@@ -10,21 +10,12 @@ export class Authenticate {
         this.logic = logic
         this.loaderHidden = true
 
-        window.authenticate = this
+        window.authenticate = this // DEBUG
     }
 
     ok() {
-        // create new account
-        var addr = this.logic.createWallet()
-        console.log('new addr: ' + addr)
-
-        // get some funding for it
-        this.logic.fundAccount(addr);
-
         // generate random token
         this.appState.token = this.logic.getRandomToken()
-
-        this.logic.setAddress(addr)
 
         // (in the final implementation, it should then be blinded and sent to the registry for signing)
 

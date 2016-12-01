@@ -16,46 +16,122 @@ export class Logic {
         this.config = config
         this.contracts = contracts
 
-        // this is a workaround to get() currently supporting only 2 levels, see https://github.com/Vheissu/aurelia-configuration/issues/68
-        var rpcAddr = config.getAll().ethereum.rpc
-        this.ethConnect(rpcAddr)
+        // eth and account setup are done asap, because the funding request will take some time anyway
+        // and may block voting (the voting module waits for a funding promise)
+        this.initEth()
+        this.createAndFundAccount()
+        this.instantiateContract()
 
+        this.watchElectionStatus()
+
+        window.web3 = this.web3 // DEBUG
         window.logic = this
-        window.wallet = Wallet
+        //window.Wallet = Wallet
         window.tx = Tx
     }
 
-    ethConnect(rpcAddr) {
-        this.web3 = new Web3(new Web3.providers.HttpProvider(rpcAddr), (err, result) => {
-            if(err) console.log(err)
+    initEth() {
+        // getAll() is a workaround to get() currently supporting only 2 levels, see https://github.com/Vheissu/aurelia-configuration/issues/68
+        let rpcAddr = this.config.getAll().ethereum.rpc
 
-            console.log('coinbase: ' + this.web3.eth.coinbase)
-            this.gasPrice = this.web3.toDecimal(this.web3.eth.gasPrice)
-            window.web3 = this.web3 // DEBUG
+        console.log('creating web3')
+        this.web3 = new Web3(new Web3.providers.HttpProvider(rpcAddr))
+
+        this.gasPrice = 20000000000 // init to a reasonable value
+        this.web3.eth.getGasPrice( (err, ret) => {
+            if(! err) {
+                this.gasPrice = this.web3.toDecimal(ret)
+                console.log('gasPrice: ' + this.gasPrice)
+            }
+        })
+
+        this.wallet = Wallet.generate()
+    }
+
+    createAndFundAccount() {
+        //debugger
+        let addr = this.wallet.getAddressString()
+        console.log('new addr: ' + addr)
+        this.web3.eth.defaultAccount = addr
+
+        this.fundAccount(addr);
+        var that = this
+
+        this.accountFundedPromise = new Promise((resolve, reject) => {
+            const pollIntervalMs = 2000
+            var waitingSinceMs = 0
+            function checkAndWait() {
+                that.web3.eth.getBalance(that.web3.eth.defaultAccount, (err, ret) => {
+                    let funded = false
+                    if(! err) {
+                        let balance = that.web3.toDecimal(ret)
+                        if (balance > 0)
+                            funded = true
+                    }
+                    if(! funded) {
+                        console.log('funds pending...')
+                        setTimeout(checkAndWait, pollIntervalMs)
+                        waitingSinceMs += pollIntervalMs
+                    } else {
+                        console.log('funds have arrived after ' + waitingSinceMs / 1000 + ' s')
+                        resolve()
+                    }
+                })
+            }
+
+            checkAndWait()
         })
     }
 
-    contract = {
-        instance: null,
-        getInstance: () => {
-            if(! this.instance) {
-                let Contract = this.web3.eth.contract(this.contracts.Election.info.abiDefinition)
-                this.instance = Contract.at(this.contracts.address)
-                console.log('instance addr: ' + this.contracts.address)
-            }
-            return this.instance
+    instantiateContract() {
+        let Contract = this.web3.eth.contract(this.contracts.Election.info.abiDefinition)
+
+        this.Election = Contract.at(this.contracts.address)
+        console.log('instance addr: ' + this.contracts.address)
+    }
+
+    accountIsFunded() {
+        let balance = this.web3.toDecimal(this.web3.eth.getBalance(this.web3.eth.defaultAccount))
+        if(balance > 0)
+            return true
+        else
+            return false
+    }
+
+    watchElectionStatus() {
+        let update = () => {
+            this.Election.currentStage((err, ret) => {
+                if (!err) {
+                    let newStatus = this.web3.toDecimal(ret)
+                    if(this.electionStatus != newStatus) {
+                        console.log(`new election status: ${newStatus} (${this.electionStageToString(newStatus)})`)
+                        this.electionStatus = newStatus
+                    }
+                }
+                setTimeout(update, 10000)
+            })
+        }
+
+        update()
+    }
+
+    electionStageToString(stage) {
+        switch(stage) {
+            case 0: return 'not yet started'
+            case 1: return 'in progress'
+            case 2: return 'over'
         }
     }
 
     watchErrors() {
-        this.errEvent = this.contract.getInstance().error()
+        this.errEvent = this.Election.error()
         this.errEvent.watch( (err, result) => {
-            console.log('#err# err: ' + err + ' - result: ' + result)
+            console.log('#err# err: ' + JSON.stringify(err) + ' - result: ' + JSON.stringify(result))
         })
     }
 
     watchLog() {
-        this.logEvent = this.contract.getInstance().error()
+        this.logEvent = this.Election.error()
         this.logEvent.watch( (err, result) => {
             console.log('#log# err: ' + err + ' - result: ' + result)
         })
@@ -69,24 +145,13 @@ export class Logic {
         // TODO: convert to an alphanumeric string
     }
 
-    createWallet() {
-        this.wallet = Wallet.generate()
-        return this.wallet.getAddressString()
-    }
-
-    setAddress(address) {
-        this.web3.eth.defaultAccount = address
-    }
-
     castVote(candidateId) {
-        let instance = this.contract.getInstance()
-
         this.watchErrors()
         this.watchLog()
 
-        //instance.vote(this.getRandomToken(), 'dummy', candidateId) // that would be too easy :-)
+        //this.Election.vote(this.getRandomToken(), 'dummy', candidateId) // that would be too easy :-)
         // we need to manually handle the transaction creation and signing process
-        let callData = instance.vote.getData(this.getRandomToken(), 'dummy', candidateId)
+        let callData = this.Election.vote.getData(this.getRandomToken(), 'dummy', candidateId)
         let pk = this.wallet.getPrivateKey()
         let rawTx = {
             nonce: '0x00', // our first transaction
@@ -109,25 +174,17 @@ export class Logic {
     }
 
     watchVotes(callback) {
-        this.voteEvent = this.contract.getInstance().voteEvent()
+        this.voteEvent = this.Election.voteEvent()
         this.voteEvent.watch( (err, result) => {
             if(err) {
-                console.log('### voteEvent: ' + err)
+                console.log('### voteEvent: ' + JSON.stringify(err))
             }
             if(result) {
                 let resultStr = JSON.stringify(result)
-                console.log('*** voteEvent: ' + resultStr)
+                console.log('*** voteEvent: ' + JSON.stringify(resultStr))
                 callback(result)
             }
         })
-    }
-
-    testContract() {
-        var Contract = this.web3.eth.contract(this.contracts.Election.info.abiDefinition)
-        this.contractInstance = Contract.at(this.contracts.address)
-        console.log('instance addr: ' + this.contracts.address)
-
-        console.log('multiply(): ' + this.contractInstance.multiply.call(2, 3)) // call executes locally, without tx
     }
 
     // requests some funding for the given address, needed in order to be able to send transactions
@@ -138,23 +195,15 @@ export class Logic {
     fundAccount(address) {
         $.ajax(this.config.getAll().refuelBaseUrl + address)
             .done((data, textStatus, jqXHR) => {
-                console.log('refuel done: ' + data)
+                console.log('refuel request done: ' + JSON.stringify(data))
                 this.refuelTxHash = data.txHash
                 console.log(this.refuelTxHash)
             })
             .fail((jqXHR, textStatus, errorThrown) => {
-                console.log('refuel fail: ' + textStatus + ' - ' + errorThrown)
+                console.log('refuel request fail: ' + textStatus + ' - ' + errorThrown)
             })
 
         // 100000000000000000
         // 10001000000000000
-    }
-
-    accountIsFunded() {
-        let balance = this.web3.toDecimal(this.web3.eth.getBalance(this.web3.eth.defaultAccount))
-        if(balance > 0)
-            return true
-        else
-            return false
     }
 }

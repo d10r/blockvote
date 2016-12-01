@@ -22,6 +22,7 @@ export class Processing {
     }
 
     listenForUpdates() {
+        console.log('install voteListener')
         this.logic.watchVotes( (event) => {
             // let eventStr = `neue Stimme: Block ${event.blockNumber} - Transaktion ${event.transactionHash}`
             let eventStr = 'neue Stimme | Block ' + event.blockNumber + ' - Transaktion: ' + event.transactionHash + ' - Gesamtstimmen: ' + event.args['']

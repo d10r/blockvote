@@ -18,25 +18,8 @@ export class Vote {
             console.log('token: ' + this.appState.token)
         }
 
-        this.installFundsWaitingPromise()
+        //this.installFundsWaitingPromise()
         window.vote = this
-    }
-
-    // TODO: visualize the state
-    installFundsWaitingPromise() {
-        this.accountFundedPromise = new Promise((resolve, reject) => {
-            function checkAndWait(logic) {
-                if (!logic.accountIsFunded()) {
-                    console.log('funds pending...')
-                    setTimeout(checkAndWait, 2000)
-                } else {
-                    console.log('funds have arrived')
-                    resolve()
-                }
-            }
-
-            checkAndWait(this.logic)
-        })
     }
 
     setVote(candidate) {
@@ -46,7 +29,18 @@ export class Vote {
     }
 
     castVote() {
-        this.accountFundedPromise.then( () => {
+        // if no candidate is selected, let voter confirm if that's intentional
+        if(this.candidateId == undefined) {
+            $('#whiteVoteModal').modal()
+        } else {
+            this.castVoteConfirmed()
+        }
+
+    }
+
+    castVoteConfirmed() {
+        // TODO: visualize state if waiting for promise
+        this.logic.accountFundedPromise.then( () => {
             this.logic.castVote(this.candidateId)
             this.appState.persist()
 
