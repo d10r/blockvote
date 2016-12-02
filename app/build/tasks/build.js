@@ -38,11 +38,23 @@ gulp.task('build-html', function() {
 // compile less
 gulp.task('build-less', function () {
   return gulp.src(paths.less)
-    .pipe(changed(paths.stylesRoot))
+    .pipe(changed(paths.output, {extension: '.css'}))
     .pipe(less({
       paths: [ path.join(__dirname, 'less', 'includes') ]
     }))
-    .pipe(gulp.dest(paths.stylesRoot));
+    .pipe(gulp.dest(paths.output))
+    .pipe(browserSync.stream());
+});
+
+// copy prebundled
+gulp.task('build-prebundled', function () {
+  return gulp.src(paths.preBundled)
+      .pipe(gulp.dest(paths.output));
+});
+
+gulp.task('build-images', function () {
+  return gulp.src(paths.images)
+      .pipe(gulp.dest(paths.output));
 });
 
 // copies changed css files to the output directory
@@ -60,7 +72,7 @@ gulp.task('build-css', function() {
 gulp.task('build', function(callback) {
   return runSequence(
     'clean',
-    ['build-system', 'build-html', 'build-less', 'build-css'],
+    ['build-system', 'build-html', 'build-less', 'build-css', 'build-prebundled', 'build-images'],
     callback
   );
 });
