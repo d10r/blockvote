@@ -35,7 +35,8 @@ contract Election {
     enum Stage {
         PRE_VOTING,
         VOTING,
-        POST_VOTING
+        PROCESSING,
+        RESULT
     }
 
 // ############## FIELDS ##############
@@ -78,7 +79,7 @@ contract Election {
     }
 
     function stopElection() voting {
-        currentStage = Stage.POST_VOTING;
+        currentStage = Stage.PROCESSING;
     }
     
     function vote(string _token, string _vote, uint _candidateId) returns(uint) {
@@ -99,6 +100,7 @@ contract Election {
         return 0;
     }
 
+/*
     function getResult() postVoting returns(uint[]) {
         uint[] memory votes;
         for(var i=0; i<voters.length; i++) {
@@ -109,12 +111,14 @@ contract Election {
         }
         return votes;
     }
+*/
 
     function publishResult(string _result, string _privateKey) requiresAdmin {
         result = _result;
         privateKey = _privateKey;
 
         resultPublished(_result);
+        currentStage = Stage.RESULT;
     }
 
 // ############## MODIFIERS ##############
@@ -134,10 +138,12 @@ modifier voting {
     _;
 }
 
+/*
 modifier postVoting {
     if(currentStage != Stage.POST_VOTING) throw;
     _;
 }
+*/
 
 // ############## PRIVATE FUNCTIONS ##############
 

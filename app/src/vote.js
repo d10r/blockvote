@@ -48,7 +48,7 @@ export class Vote {
 
                 this.logic.castVote(cipheredValue)
 
-                window.location = "#/process";
+                window.location = "#/result";
             })
         })
     }

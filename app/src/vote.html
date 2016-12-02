@@ -7,7 +7,7 @@
           Amtlicher Stimmzettel<br/>
           <small>für die</small><br/>
           Wahl des Bundespräsidenten<br/>
-          <small>am 2. Oktober 2016</small>
+          <small>am 4. Dezember 2016</small>
         </h1>
 
         <table class="table table-bordered">
@@ -29,8 +29,12 @@
           </tr>
         </table>
 
-        <span class="${logic.electionStatus != 0 ? 'hidden' : ''}">Die Wahl ist noch nicht gestartet</span>
-        <a class="btn btn-default btn-xl" click.trigger="castVote()"><i class="fa fa-envelope" aria-hidden="true"></i> Stimme abgeben</a>
+        <span class="text-warning ${logic.electionStatus == 1 ? 'hidden' : ''}">Derzeit ist das virtuelle Wahllokal geschlossen<br>In spätestens 15 Minuten findet der nächste Durchgang statt</span>
+
+        <span class="text-warning ${logic.electionStatus == 1 && logic.accountFunded == false ? '' : 'hidden'}">Die zur Stimmabgabe nötige Crypto-Währung ist noch nicht eingetroffen<br>Bitte noch etwas Geduld...<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+<span class="sr-only"></span></span>
+
+        <a class="btn btn-primary btn-lg ${logic.electionStatus != 1 || ! logic.accountFunded ? 'hidden' : ''}" click.trigger="castVote()"><i class="fa fa-envelope" aria-hidden="true"></i> Stimme abgeben</a>
       </div>
     </div>
   </div>
@@ -41,7 +45,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Wahlzettel weiß abgeben?</h4>
+        <h4 class="modal-title">Stimmzettel weiß abgeben?</h4>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>

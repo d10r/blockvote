@@ -58,6 +58,7 @@ export class Logic {
         })
 
         this.wallet = Wallet.generate()
+        this.electionResultPromise = this.getElectionResultPromise()
     }
 
     createAndFundAccount() {
@@ -66,6 +67,7 @@ export class Logic {
         console.log('new addr: ' + addr)
         this.web3.eth.defaultAccount = addr
 
+        this.accountFunded = false
         this.fundAccount(addr);
         var that = this
 
@@ -86,6 +88,7 @@ export class Logic {
                         waitingSinceMs += pollIntervalMs
                     } else {
                         console.log('funds have arrived after ' + waitingSinceMs / 1000 + ' s')
+                        that.accountFunded = true
                         resolve()
                     }
                 })
@@ -102,6 +105,7 @@ export class Logic {
         console.log('instance addr: ' + this.contracts.address)
     }
 
+    /*
     accountIsFunded() {
         let balance = this.web3.toDecimal(this.web3.eth.getBalance(this.web3.eth.defaultAccount))
         if(balance > 0)
@@ -109,8 +113,11 @@ export class Logic {
         else
             return false
     }
+    */
 
+    electionStatusObservers = new Set()
     watchElectionStatus() {
+        // TODO: this should use an Ethereum event instead of polling
         let update = () => {
             this.Election.currentStage((err, ret) => {
                 if (!err) {
@@ -118,6 +125,16 @@ export class Logic {
                     if(this.electionStatus != newStatus) {
                         console.log(`new election status: ${newStatus} (${this.electionStageToString(newStatus)})`)
                         this.electionStatus = newStatus
+
+                        if(this.electionStatus == 3) {
+                           this.setElectionResult()
+                        }
+
+                        /*
+                        for(let observer of this.electionStatusObservers) {
+                            observer()
+                        }
+                        */
                     }
                 }
                 setTimeout(update, 10000)
@@ -127,11 +144,44 @@ export class Logic {
         update()
     }
 
+    setElectionResult() {
+        this.Election.result((err, ret) => {
+            if (!err) {
+                console.log('got election result: ' + ret)
+
+                try {
+                    this.electionResult = JSON.parse(ret)
+                } catch(e) {
+                    console.error('parsing election result failed with: ' + e)
+                    return
+                }
+                if(! this.electionResult['hofer']) {
+                    this.electionResult['hofer'] = 0
+                }
+                if(! this.electionResult['vdb']) {
+                    this.electionResult['vdb'] = 0
+                }
+
+                this.electionResultReady() // triggers promise resolution
+            }
+        })
+    }
+
+    // expects a function without params as parameter
+    addElectionStatusObserver(observer) {
+        this.electionStatusObservers.add(observer)
+    }
+
+    removeElectionStatusObserver(observer) {
+        this.electionStatusObservers.delete(observer)
+    }
+
     electionStageToString(stage) {
         switch(stage) {
             case 0: return 'not yet started'
             case 1: return 'in progress'
-            case 2: return 'over'
+            case 2: return 'processing'
+            case 3: return 'result ready'
         }
     }
 
@@ -211,6 +261,12 @@ export class Logic {
                 console.log('*** voteEvent: ' + JSON.stringify(resultStr))
                 callback(result)
             }
+        })
+    }
+
+    getElectionResultPromise() {
+        return new Promise( (resolve, reject) => {
+            this.electionResultReady = resolve // will be triggered from outside
         })
     }
 

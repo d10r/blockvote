@@ -38,7 +38,9 @@ exports.run = (ctx) => {
 }
 
 function updateWebJsFile(address) {
+    console.log('updating ../app/src/contracts.js')
     var oldData = fs.readFileSync('../app/src/contracts.js')
-    var newData = oldData.toString().replace(/<contractaddress-placeholder>/g, address)
+    // updates only the first match which is expected quite at the top of the file
+    var newData = oldData.toString().replace(/\saddress\s*=\s*.*/, `address = "${address}"`)
     fs.writeFileSync('../app/src/contracts.js', newData)
 }
