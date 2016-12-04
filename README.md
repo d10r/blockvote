@@ -1,3 +1,7 @@
+# THIS PROJECT IS DEPRECATED IN FAVOUR OF [die-unendliche-wahl](https://github.com/d10r/die-unendliche-wahl/)
+
+
+
 # Modules
 
 * Setup
